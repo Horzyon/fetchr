@@ -2,3 +2,6 @@ fastapi
 uvicorn[standard]
 yt-dlp
 pydantic
+aiosqlite
+python-jose[cryptography]
+passlib[bcrypt]
