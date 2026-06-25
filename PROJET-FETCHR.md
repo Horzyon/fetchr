@@ -1,8 +1,8 @@
-# Grab — Video Downloader SaaS
+# Fetchr — Video Downloader SaaS
 
 ## Vue d'ensemble
 
-Grab est un service de téléchargement de vidéos/audio depuis YouTube, TikTok, Instagram, Twitter et Reddit. Design propre sans pub, monétisé par un abonnement Pro. Alternative à notube/y2mate avec une UX soignée.
+Fetchr est un service de téléchargement de vidéos/audio depuis YouTube, TikTok, Instagram, Twitter et Reddit. Design propre sans pub, monétisé par un abonnement Pro. Alternative à notube/y2mate avec une UX soignée.
 
 **Statut** : Mockup fonctionnel (Docker tourne en local). Pas encore d'auth réelle ni de paiement intégré.
 
@@ -67,7 +67,7 @@ video-downloader/
 ### Sessions
 
 Stockées en mémoire (dict Python). Pas de base de données. Chaque session contient :
-- `dir` : chemin du dossier temporaire (`/tmp/grab/{session_id}`)
+- `dir` : chemin du dossier temporaire (`/tmp/fetchr/{session_id}`)
 - `meta` : métadonnées yt-dlp complètes
 - `url`, `pro` (booléen)
 - `video_ready`, `audio_ready` (booléens)
@@ -106,7 +106,7 @@ Stockées en mémoire (dict Python). Pas de base de données. Chaque session con
   1. "Conversion" (barre indéterminée animée)
   2. "Transfert" (progression réelle avec vitesse + ETA)
 - Barre de quota journalier (2/5 grabs)
-- Badge "Pro" en exposant sur le titre "Grab"
+- Badge "Pro" en exposant sur le titre "Fetchr"
 - Dark/light mode toggle (persiste en localStorage)
 
 ### Page Pro (`pro.html`)
@@ -118,8 +118,8 @@ Stockées en mémoire (dict Python). Pas de base de données. Chaque session con
 
 ### Page API (`api.html`)
 
-- Base URL : `https://api.grab.download/v1`
-- Auth par header `Authorization: Bearer grab_sk_xxxxxxxxxxxx`
+- Base URL : `https://api.fetchr.fr/v1`
+- Auth par header `Authorization: Bearer fetchr_sk_xxxxxxxxxxxx`
 - Documentation des 3 endpoints avec exemples de requête/réponse
 - Exemple complet en curl (prepare → poll status → download)
 - Limites : 50 req/jour (Free), 1000 req/jour (Pro)
@@ -221,7 +221,7 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-app = FastAPI(title="Grab API")
+app = FastAPI(title="Fetchr API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -230,7 +230,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-TEMP_DIR = Path("/tmp/grab")
+TEMP_DIR = Path("/tmp/fetchr")
 TEMP_DIR.mkdir(exist_ok=True)
 
 # Stocke les sessions de pré-fetch actives
@@ -338,7 +338,7 @@ async def download(req: ConvertRequest):
 
     session["last_download"] = time.time()
 
-    title = session["meta"].get("title", "grab")
+    title = session["meta"].get("title", "fetchr")
     safe_title = "".join(c for c in title if c.isalnum() or c in " -_")[:80]
     filename = f"{safe_title}.{output.suffix.lstrip('.')}"
 

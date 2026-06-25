@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grab — Télécharge n'importe quoi</title>
+    <title>Fetchr — Télécharge n'importe quoi</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -654,7 +654,7 @@
 </head>
 <body>
     <nav class="topbar">
-        <a href="/" class="topbar-brand">Grab</a>
+        <a href="/" class="topbar-brand">Fetchr</a>
         <div class="topbar-actions">
             <a href="/api.html" class="api-link">API</a>
             <a href="/pro.html" class="pro-link">Pro</a>
@@ -676,7 +676,7 @@
     </nav>
 
     <section class="hero">
-        <h1><span class="brand-text">Grab</span><span class="hero-pro">Pro</span></h1>
+        <h1><span class="brand-text">Fetchr</span><span class="hero-pro">Pro</span></h1>
         <p>Colle un lien. Choisis un format. C'est tout.</p>
 
         <div class="input-wrapper" id="inputWrapper">
@@ -924,7 +924,7 @@
             }, 50);
         });
 
-        // Grab: prepare + prefetch
+        // Fetch: prepare + prefetch
         let currentGrabUrl = null;
 
         async function handleGrab() {
@@ -1077,7 +1077,7 @@
                     // Trigger download
                     const blob = new Blob(chunks);
                     const filename = res.headers.get('content-disposition')
-                        ?.match(/filename="?(.+?)"?$/)?.[1] || `grab.${format === 'video' ? 'mp4' : 'mp3'}`;
+                        ?.match(/filename="?(.+?)"?$/)?.[1] || `fetchr.${format === 'video' ? 'mp4' : 'mp3'}`;
                     const a = document.createElement('a');
                     a.href = URL.createObjectURL(blob);
                     a.download = filename;

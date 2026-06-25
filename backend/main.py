@@ -11,7 +11,7 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-app = FastAPI(title="Grab API")
+app = FastAPI(title="Fetchr API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,7 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-TEMP_DIR = Path("/tmp/grab")
+TEMP_DIR = Path("/tmp/fetchr")
 TEMP_DIR.mkdir(exist_ok=True)
 
 # Stocke les sessions de pré-fetch actives
@@ -132,7 +132,7 @@ async def download(req: ConvertRequest):
 
     session["last_download"] = time.time()
 
-    title = session["meta"].get("title", "grab")
+    title = session["meta"].get("title", "fetchr")
     safe_title = "".join(c for c in title if c.isalnum() or c in " -_")[:80]
     filename = f"{safe_title}.{output.suffix.lstrip('.')}"
 

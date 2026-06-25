@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grab API — Documentation</title>
+    <title>Fetchr API — Documentation</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -331,16 +331,16 @@
 </head>
 <body>
     <nav class="topbar">
-        <a href="/" class="topbar-brand">Grab</a>
+        <a href="/" class="topbar-brand">Fetchr</a>
         <a href="/" class="topbar-back">&larr; Retour</a>
     </nav>
 
     <div class="page">
         <section class="hero">
             <h1>API</h1>
-            <p>Trois endpoints. Un token. Intègre Grab dans tes scripts, bots, ou apps.</p>
+            <p>Trois endpoints. Un token. Intègre Fetchr dans tes scripts, bots, ou apps.</p>
             <div class="base-url">
-                <span>https://api.grab.download/v1</span>
+                <span>https://api.fetchr.fr/v1</span>
             </div>
         </section>
 
@@ -350,7 +350,7 @@
             <div class="auth-box">
                 <p>Ajoute ton token dans le header de chaque requête :</p>
                 <div class="code-block" style="margin-top: 12px;">
-<span class="key">Authorization</span>: Bearer <span class="string">grab_sk_xxxxxxxxxxxx</span>
+<span class="key">Authorization</span>: Bearer <span class="string">fetchr_sk_xxxxxxxxxxxx</span>
                 </div>
                 <p style="margin-top: 12px;">Génère ton token dans les <a href="#" style="color: var(--accent);">paramètres de ton compte</a>.</p>
             </div>
@@ -479,20 +479,20 @@
             <div class="section-title">Exemple complet</div>
             <div class="code-block">
 <span class="comment"># 1. Prépare la vidéo</span>
-<span class="method">SESSION</span>=$(curl -s -X POST https://api.grab.download/v1/prepare \
-  -H <span class="string">"Authorization: Bearer grab_sk_xxxx"</span> \
+<span class="method">SESSION</span>=$(curl -s -X POST https://api.fetchr.fr/v1/prepare \
+  -H <span class="string">"Authorization: Bearer fetchr_sk_xxxx"</span> \
   -H <span class="string">"Content-Type: application/json"</span> \
   -d <span class="string">'{"url": "https://youtube.com/watch?v=dQw4w9WgXcQ"}'</span> \
   | jq -r .session_id)
 
 <span class="comment"># 2. Attends que ce soit prêt</span>
-while ! curl -s https://api.grab.download/v1/status/$SESSION | jq -e '.video_ready' > /dev/null; do
+while ! curl -s https://api.fetchr.fr/v1/status/$SESSION | jq -e '.video_ready' > /dev/null; do
   sleep 2
 done
 
 <span class="comment"># 3. Télécharge</span>
-curl -s -X POST https://api.grab.download/v1/download \
-  -H <span class="string">"Authorization: Bearer grab_sk_xxxx"</span> \
+curl -s -X POST https://api.fetchr.fr/v1/download \
+  -H <span class="string">"Authorization: Bearer fetchr_sk_xxxx"</span> \
   -H <span class="string">"Content-Type: application/json"</span> \
   -d <span class="string">"{\"session_id\": \"$SESSION\", \"format\": \"video\", \"quality\": \"1080p\"}"</span> \
   -o <span class="string">video.mp4</span>
