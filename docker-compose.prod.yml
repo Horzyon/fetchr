@@ -16,8 +16,8 @@ services:
     build: ./backend
     expose:
       - "8000"
-    environment:
-      - JWT_SECRET=${JWT_SECRET}
+    env_file:
+      - .env
     volumes:
       - fetchr_data:/data
     restart: unless-stopped
