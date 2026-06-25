@@ -1,4 +1,4 @@
-fetchr.fr {
+:80 {
     handle /api/* {
         uri strip_prefix /api
         reverse_proxy backend:8000
