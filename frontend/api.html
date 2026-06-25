@@ -18,6 +18,7 @@
             --text: #e8e8f0;
             --text-muted: #6b6b80;
             --accent: #6366f1;
+            --glow: #6366f1;
             --green: #22c55e;
             --red: #ff2d2d;
             --cyan: #00f2ea;
@@ -39,24 +40,23 @@
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             padding: 0 20px;
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        .page {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 60px 0 80px;
-        }
-
-        /* Nav */
+        /* Top bar — same as index.html */
         .topbar {
+            width: 100%;
+            max-width: 900px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 16px 0;
-            max-width: 720px;
-            margin: 0 auto;
+            position: relative;
+            z-index: 10;
         }
 
         .topbar-brand {
@@ -67,14 +67,140 @@
             text-decoration: none;
         }
 
-        .topbar-back {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s ease;
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        .topbar-back:hover { color: var(--text); }
+        .api-link {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            transition: color 0.2s ease, border-color 0.2s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        .api-link:hover {
+            color: var(--text);
+            border-color: var(--glow);
+        }
+
+        .pro-link {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #f59e0b;
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .pro-link:hover {
+            background: #f59e0b;
+            color: #fff;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .theme-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            transition: transform 0.3s ease, background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-thumb svg {
+            width: 11px;
+            height: 11px;
+            fill: var(--bg);
+        }
+
+        .theme-toggle input:checked ~ .toggle-thumb {
+            transform: translateX(20px);
+            background: var(--glow);
+        }
+
+        /* Account button */
+        .account-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+            text-decoration: none;
+        }
+
+        .account-btn:hover {
+            border-color: var(--glow);
+        }
+
+        .account-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-muted);
+        }
+
+        .account-btn.logged-in {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .account-btn.logged-in svg {
+            display: none;
+        }
+
+        /* Page content */
+        .page {
+            max-width: 720px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 60px 0 80px;
+        }
 
         /* Hero */
         .hero {
@@ -332,15 +458,32 @@
 <body>
     <nav class="topbar">
         <a href="/" class="topbar-brand">Fetchr</a>
-        <a href="/" class="topbar-back">&larr; Retour</a>
+        <div class="topbar-actions">
+            <a href="/api.html" class="api-link">API</a>
+            <a href="/pro.html" class="pro-link">Pro</a>
+            <label class="theme-toggle" title="Changer de theme">
+                <input type="checkbox" id="themeSwitch">
+                <span class="toggle-track"></span>
+                <span class="toggle-thumb">
+                    <svg viewBox="0 0 16 16" id="themeIcon">
+                        <path d="M8 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 1zm0 11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 12zm7-4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5zM4 8a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1A.5.5 0 0 1 4 8zm8.5-3.8a.5.5 0 0 1 0 .7l-.7.7a.5.5 0 1 1-.7-.7l.7-.7a.5.5 0 0 1 .7 0zM5 11.3a.5.5 0 0 1 0 .7l-.7.7a.5.5 0 0 1-.7-.7l.7-.7a.5.5 0 0 1 .7 0zm7.7.7a.5.5 0 0 1-.7 0l-.7-.7a.5.5 0 0 1 .7-.7l.7.7a.5.5 0 0 1 0 .7zM5 4.6a.5.5 0 0 1-.7.7l-.7-.7a.5.5 0 0 1 .7-.7l.7.7zM8 5a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+                    </svg>
+                </span>
+            </label>
+            <a href="/account.html" class="account-btn" id="accountBtn" title="Mon compte">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                </svg>
+            </a>
+        </div>
     </nav>
 
     <div class="page">
         <section class="hero">
             <h1>API</h1>
-            <p>Trois endpoints. Un token. Intègre Fetchr dans tes scripts, bots, ou apps.</p>
+            <p>Trois endpoints. Un token. Integre Fetchr dans tes scripts, bots, ou apps.</p>
             <div class="base-url">
-                <span>https://api.fetchr.fr/v1</span>
+                <span>https://api.grab.download/v1</span>
             </div>
         </section>
 
@@ -348,11 +491,11 @@
         <section class="section">
             <div class="section-title">Authentification</div>
             <div class="auth-box">
-                <p>Ajoute ton token dans le header de chaque requête :</p>
+                <p>Ajoute ton token dans le header de chaque requete :</p>
                 <div class="code-block" style="margin-top: 12px;">
-<span class="key">Authorization</span>: Bearer <span class="string">fetchr_sk_xxxxxxxxxxxx</span>
+<span class="key">Authorization</span>: Bearer <span class="string">grab_sk_xxxxxxxxxxxx</span>
                 </div>
-                <p style="margin-top: 12px;">Génère ton token dans les <a href="#" style="color: var(--accent);">paramètres de ton compte</a>.</p>
+                <p style="margin-top: 12px;">Genere ton token dans les <a href="/account.html" style="color: var(--accent);">parametres de ton compte</a>.</p>
             </div>
         </section>
 
@@ -362,11 +505,11 @@
             <div class="limits">
                 <div class="limit-card">
                     <div class="limit-value free">50</div>
-                    <div class="limit-label">requêtes/jour (Free)</div>
+                    <div class="limit-label">requetes/jour (Free)</div>
                 </div>
                 <div class="limit-card">
                     <div class="limit-value pro">1000</div>
-                    <div class="limit-label">requêtes/jour (Pro)</div>
+                    <div class="limit-label">requetes/jour (Pro)</div>
                 </div>
             </div>
         </section>
@@ -382,10 +525,10 @@
                     <span class="endpoint-path">/prepare</span>
                 </div>
                 <div class="endpoint-desc">
-                    Lance le pré-fetch d'une vidéo. Retourne les métadonnées et un session_id.
+                    Lance le pre-fetch d'une video. Retourne les metadonnees et un session_id.
                 </div>
                 <div class="endpoint-body">
-                    <div class="code-label">Requête</div>
+                    <div class="code-label">Requete</div>
                     <div class="code-block">
 <span class="method">POST</span> <span class="url">/v1/prepare</span>
 
@@ -394,7 +537,7 @@
 }
                     </div>
 
-                    <div class="code-label" style="margin-top: 16px;">Réponse</div>
+                    <div class="code-label" style="margin-top: 16px;">Reponse</div>
                     <div class="code-block">
 {
   <span class="key">"session_id"</span>: <span class="string">"a1b2c3d4"</span>,
@@ -414,10 +557,10 @@
                     <span class="endpoint-path">/status/{session_id}</span>
                 </div>
                 <div class="endpoint-desc">
-                    Vérifie si le pré-fetch est terminé. Poll jusqu'à ce que les deux soient <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--green);">true</code>.
+                    Verifie si le pre-fetch est termine. Poll jusqu'a ce que les deux soient <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--green);">true</code>.
                 </div>
                 <div class="endpoint-body">
-                    <div class="code-label">Réponse</div>
+                    <div class="code-label">Reponse</div>
                     <div class="code-block">
 {
   <span class="key">"video_ready"</span>: <span class="method">true</span>,
@@ -434,10 +577,10 @@
                     <span class="endpoint-path">/download</span>
                 </div>
                 <div class="endpoint-desc">
-                    Télécharge le fichier converti. Retourne un stream binaire (le fichier).
+                    Telecharge le fichier converti. Retourne un stream binaire (le fichier).
                 </div>
                 <div class="endpoint-body">
-                    <div class="code-label">Requête</div>
+                    <div class="code-label">Requete</div>
                     <div class="code-block">
 <span class="method">POST</span> <span class="url">/v1/download</span>
 
@@ -456,7 +599,7 @@
                             <tr>
                                 <td><span class="param-name">session_id</span><span class="param-required">requis</span></td>
                                 <td><span class="param-type">string</span></td>
-                                <td class="param-desc">ID retourné par /prepare</td>
+                                <td class="param-desc">ID retourne par /prepare</td>
                             </tr>
                             <tr>
                                 <td><span class="param-name">format</span><span class="param-required">requis</span></td>
@@ -478,26 +621,73 @@
         <section class="section">
             <div class="section-title">Exemple complet</div>
             <div class="code-block">
-<span class="comment"># 1. Prépare la vidéo</span>
-<span class="method">SESSION</span>=$(curl -s -X POST https://api.fetchr.fr/v1/prepare \
-  -H <span class="string">"Authorization: Bearer fetchr_sk_xxxx"</span> \
+<span class="comment"># 1. Prepare la video</span>
+<span class="method">SESSION</span>=$(curl -s -X POST https://api.grab.download/v1/prepare \
+  -H <span class="string">"Authorization: Bearer grab_sk_xxxx"</span> \
   -H <span class="string">"Content-Type: application/json"</span> \
   -d <span class="string">'{"url": "https://youtube.com/watch?v=dQw4w9WgXcQ"}'</span> \
   | jq -r .session_id)
 
-<span class="comment"># 2. Attends que ce soit prêt</span>
-while ! curl -s https://api.fetchr.fr/v1/status/$SESSION | jq -e '.video_ready' > /dev/null; do
+<span class="comment"># 2. Attends que ce soit pret</span>
+while ! curl -s https://api.grab.download/v1/status/$SESSION | jq -e '.video_ready' > /dev/null; do
   sleep 2
 done
 
-<span class="comment"># 3. Télécharge</span>
-curl -s -X POST https://api.fetchr.fr/v1/download \
-  -H <span class="string">"Authorization: Bearer fetchr_sk_xxxx"</span> \
+<span class="comment"># 3. Telecharge</span>
+curl -s -X POST https://api.grab.download/v1/download \
+  -H <span class="string">"Authorization: Bearer grab_sk_xxxx"</span> \
   -H <span class="string">"Content-Type: application/json"</span> \
   -d <span class="string">"{\"session_id\": \"$SESSION\", \"format\": \"video\", \"quality\": \"1080p\"}"</span> \
   -o <span class="string">video.mp4</span>
             </div>
         </section>
     </div>
+
+    <script>
+        const API = window.location.origin + '/api';
+
+        // Theme toggle
+        const themeSwitch = document.getElementById('themeSwitch');
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeSwitch.checked = true;
+        }
+        themeSwitch.addEventListener('change', () => {
+            if (themeSwitch.checked) {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Auth check for topbar
+        async function checkAuth() {
+            const token = localStorage.getItem('fetchr_token');
+            if (!token) return;
+
+            try {
+                const res = await fetch(`${API}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+
+                if (!res.ok) {
+                    localStorage.removeItem('fetchr_token');
+                    return;
+                }
+
+                const user = await res.json();
+                const accountBtn = document.getElementById('accountBtn');
+                accountBtn.classList.add('logged-in');
+                accountBtn.textContent = user.username.charAt(0).toUpperCase();
+            } catch {
+                localStorage.removeItem('fetchr_token');
+            }
+        }
+
+        checkAuth();
+    </script>
 </body>
 </html>
