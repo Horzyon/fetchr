@@ -16,8 +16,13 @@ services:
     build: ./backend
     expose:
       - "8000"
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - fetchr_data:/data
     restart: unless-stopped
 
 volumes:
   caddy_data:
   caddy_config:
+  fetchr_data:

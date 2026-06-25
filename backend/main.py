@@ -6,10 +6,15 @@ import time
 import os
 import shutil
 from pathlib import Path
-from fastapi import FastAPI, HTTPException
+from typing import Optional
+
+from fastapi import FastAPI, HTTPException, Header
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+from database import init_db, create_user, get_user_by_email, get_user_by_id
+from auth import hash_password, verify_password, create_token, decode_token
 
 app = FastAPI(title="Grab API")
 
@@ -30,6 +35,98 @@ sessions: dict[str, dict] = {}
 CLEANUP_DELAY = 150  # 2min30 après le dernier download
 
 
+# --- Auth models ---
+
+class RegisterRequest(BaseModel):
+    email: str
+    username: str
+    password: str
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+# --- Auth helpers ---
+
+async def _get_current_user(authorization: Optional[str] = None) -> dict | None:
+    """Extract and validate Bearer token, return user dict or None."""
+    if not authorization or not authorization.startswith("Bearer "):
+        return None
+    token = authorization.removeprefix("Bearer ")
+    user_id = decode_token(token)
+    if user_id is None:
+        return None
+    user = await get_user_by_id(user_id)
+    return user
+
+
+# --- Auth endpoints ---
+
+@app.post("/auth/register")
+async def register(req: RegisterRequest):
+    existing = await get_user_by_email(req.email)
+    if existing:
+        raise HTTPException(409, "Un compte avec cet email existe deja")
+
+    hashed = hash_password(req.password)
+    try:
+        user = await create_user(req.email, req.username, hashed)
+    except Exception as e:
+        if "UNIQUE" in str(e):
+            raise HTTPException(409, "Email ou username deja pris")
+        raise HTTPException(500, "Erreur creation compte")
+
+    token = create_token(user["id"])
+    return {"token": token, "user": user}
+
+
+@app.post("/auth/login")
+async def login(req: LoginRequest):
+    user = await get_user_by_email(req.email)
+    if not user or not verify_password(req.password, user["password_hash"]):
+        raise HTTPException(401, "Email ou mot de passe incorrect")
+
+    token = create_token(user["id"])
+    return {
+        "token": token,
+        "user": {
+            "id": user["id"],
+            "email": user["email"],
+            "username": user["username"],
+            "is_pro": bool(user["is_pro"]),
+            "api_token": user["api_token"],
+        },
+    }
+
+
+@app.get("/auth/me")
+async def me(authorization: Optional[str] = Header(None)):
+    user = await _get_current_user(authorization)
+    if not user:
+        raise HTTPException(401, "Token invalide ou expire")
+    return {
+        "id": user["id"],
+        "email": user["email"],
+        "username": user["username"],
+        "is_pro": bool(user["is_pro"]),
+        "api_token": user["api_token"],
+        "pro_expires_at": user["pro_expires_at"],
+    }
+
+
+@app.post("/auth/refresh")
+async def refresh(authorization: Optional[str] = Header(None)):
+    user = await _get_current_user(authorization)
+    if not user:
+        raise HTTPException(401, "Token invalide ou expire")
+    token = create_token(user["id"])
+    return {"token": token}
+
+
+# --- Download models ---
+
 class PrepareRequest(BaseModel):
     url: str
     pro: bool = False
@@ -42,7 +139,13 @@ class ConvertRequest(BaseModel):
 
 
 @app.post("/prepare")
-async def prepare(req: PrepareRequest):
+async def prepare(req: PrepareRequest, authorization: Optional[str] = Header(None)):
+    # Determine pro status from auth token if present
+    pro = False
+    user = await _get_current_user(authorization)
+    if user and bool(user["is_pro"]):
+        pro = True
+
     session_id = str(uuid.uuid4())[:8]
     session_dir = TEMP_DIR / session_id
     session_dir.mkdir(exist_ok=True)
@@ -55,14 +158,14 @@ async def prepare(req: PrepareRequest):
         "dir": str(session_dir),
         "meta": meta,
         "url": req.url,
-        "pro": req.pro,
+        "pro": pro,
         "video_ready": False,
         "audio_ready": False,
         "created_at": time.time(),
         "last_download": None,
     }
 
-    asyncio.create_task(_prefetch(session_id, req.url, req.pro, session_dir))
+    asyncio.create_task(_prefetch(session_id, req.url, pro, session_dir))
 
     return {
         "session_id": session_id,
@@ -349,6 +452,7 @@ async def _global_cleanup():
 
 @app.on_event("startup")
 async def startup():
+    await init_db()
     asyncio.create_task(_global_cleanup())
     # Nettoyer les restes d'un crash précédent
     if TEMP_DIR.exists():
