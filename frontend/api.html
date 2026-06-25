@@ -483,7 +483,7 @@
             <h1>API</h1>
             <p>Trois endpoints. Un token. Integre Fetchr dans tes scripts, bots, ou apps.</p>
             <div class="base-url">
-                <span>https://api.grab.download/v1</span>
+                <span>https://api.fetchr.fr/v1</span>
             </div>
         </section>
 
@@ -493,7 +493,7 @@
             <div class="auth-box">
                 <p>Ajoute ton token dans le header de chaque requete :</p>
                 <div class="code-block" style="margin-top: 12px;">
-<span class="key">Authorization</span>: Bearer <span class="string">grab_sk_xxxxxxxxxxxx</span>
+<span class="key">Authorization</span>: Bearer <span class="string">fetchr_sk_xxxxxxxxxxxx</span>
                 </div>
                 <p style="margin-top: 12px;">Genere ton token dans les <a href="/account.html" style="color: var(--accent);">parametres de ton compte</a>.</p>
             </div>
@@ -622,20 +622,20 @@
             <div class="section-title">Exemple complet</div>
             <div class="code-block">
 <span class="comment"># 1. Prepare la video</span>
-<span class="method">SESSION</span>=$(curl -s -X POST https://api.grab.download/v1/prepare \
-  -H <span class="string">"Authorization: Bearer grab_sk_xxxx"</span> \
+<span class="method">SESSION</span>=$(curl -s -X POST https://api.fetchr.fr/v1/prepare \
+  -H <span class="string">"Authorization: Bearer fetchr_sk_xxxx"</span> \
   -H <span class="string">"Content-Type: application/json"</span> \
   -d <span class="string">'{"url": "https://youtube.com/watch?v=dQw4w9WgXcQ"}'</span> \
   | jq -r .session_id)
 
 <span class="comment"># 2. Attends que ce soit pret</span>
-while ! curl -s https://api.grab.download/v1/status/$SESSION | jq -e '.video_ready' > /dev/null; do
+while ! curl -s https://api.fetchr.fr/v1/status/$SESSION | jq -e '.video_ready' > /dev/null; do
   sleep 2
 done
 
 <span class="comment"># 3. Telecharge</span>
-curl -s -X POST https://api.grab.download/v1/download \
-  -H <span class="string">"Authorization: Bearer grab_sk_xxxx"</span> \
+curl -s -X POST https://api.fetchr.fr/v1/download \
+  -H <span class="string">"Authorization: Bearer fetchr_sk_xxxx"</span> \
   -H <span class="string">"Content-Type: application/json"</span> \
   -d <span class="string">"{\"session_id\": \"$SESSION\", \"format\": \"video\", \"quality\": \"1080p\"}"</span> \
   -o <span class="string">video.mp4</span>
