@@ -118,6 +118,19 @@
             fill: var(--text-muted);
         }
 
+        .account-btn.logged-in {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .account-btn.logged-in svg {
+            display: none;
+        }
+
         /* Toggle switch */
         .theme-toggle {
             position: relative;
@@ -667,7 +680,7 @@
                     </svg>
                 </span>
             </label>
-            <a href="/account.html" class="account-btn" title="Mon compte">
+            <a href="/account.html" class="account-btn" id="accountBtn" title="Mon compte">
                 <svg viewBox="0 0 24 24">
                     <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
                 </svg>
@@ -798,7 +811,48 @@
 
     <script>
         const API = window.location.origin + '/api';
-        const isPro = false; // TODO: auth
+        let isPro = false;
+        let authToken = localStorage.getItem('fetchr_token');
+
+        // Auth check on page load
+        async function checkAuth() {
+            if (!authToken) return;
+
+            try {
+                const res = await fetch(`${API}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` },
+                });
+
+                if (!res.ok) {
+                    localStorage.removeItem('fetchr_token');
+                    authToken = null;
+                    return;
+                }
+
+                const user = await res.json();
+                isPro = user.is_pro;
+
+                // Update account button to show user initial
+                const accountBtn = document.getElementById('accountBtn');
+                accountBtn.classList.add('logged-in');
+                accountBtn.textContent = user.username.charAt(0).toUpperCase();
+
+                // Unlock pro formats if user is pro
+                if (isPro) {
+                    document.querySelectorAll('.format-btn.locked').forEach(btn => {
+                        btn.classList.remove('locked');
+                    });
+                    // Hide hero-pro badge (user already has pro)
+                    const heroPro = document.querySelector('.hero-pro');
+                    if (heroPro) heroPro.style.display = 'none';
+                }
+            } catch {
+                localStorage.removeItem('fetchr_token');
+                authToken = null;
+            }
+        }
+
+        checkAuth();
 
         // Theme toggle
         const themeSwitch = document.getElementById('themeSwitch');
@@ -940,9 +994,12 @@
             statusText.textContent = 'Pré-téléchargement en cours...';
 
             try {
+                const headers = { 'Content-Type': 'application/json' };
+                if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+
                 const res = await fetch(`${API}/prepare`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers,
                     body: JSON.stringify({ url, pro: isPro }),
                 });
 

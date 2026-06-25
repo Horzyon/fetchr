@@ -18,6 +18,7 @@
             --text: #e8e8f0;
             --text-muted: #6b6b80;
             --accent: #6366f1;
+            --glow: #6366f1;
             --gold: #f59e0b;
             --green: #22c55e;
             --red: #ef4444;
@@ -38,22 +39,23 @@
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             padding: 0 20px;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
-        .page {
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 40px 0 80px;
-        }
-
+        /* Top bar — same as index.html */
         .topbar {
+            width: 100%;
+            max-width: 900px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 16px 0;
-            max-width: 480px;
-            margin: 0 auto;
+            position: relative;
+            z-index: 10;
         }
 
         .topbar-brand {
@@ -64,13 +66,140 @@
             text-decoration: none;
         }
 
-        .topbar-back {
-            font-size: 0.85rem;
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .api-link {
+            font-size: 0.8rem;
+            font-weight: 500;
             color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            transition: color 0.2s ease, border-color 0.2s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        .api-link:hover {
+            color: var(--text);
+            border-color: var(--glow);
+        }
+
+        .pro-link {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #f59e0b;
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .pro-link:hover {
+            background: #f59e0b;
+            color: #fff;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .theme-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            transition: transform 0.3s ease, background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-thumb svg {
+            width: 11px;
+            height: 11px;
+            fill: var(--bg);
+        }
+
+        .theme-toggle input:checked ~ .toggle-thumb {
+            transform: translateX(20px);
+            background: var(--glow);
+        }
+
+        /* Account button */
+        .account-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
             text-decoration: none;
         }
 
-        .topbar-back:hover { color: var(--text); }
+        .account-btn:hover {
+            border-color: var(--glow);
+        }
+
+        .account-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-muted);
+        }
+
+        .account-btn.logged-in {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .account-btn.logged-in svg {
+            display: none;
+        }
+
+        /* Page content */
+        .page {
+            max-width: 480px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 0 80px;
+        }
 
         h2 {
             font-family: 'Space Grotesk', sans-serif;
@@ -158,6 +287,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: transform 0.15s ease, opacity 0.2s ease;
+            margin-top: 8px;
         }
 
         .submit-btn:hover {
@@ -168,55 +298,30 @@
             transform: scale(0.98);
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 20px 0;
-            color: var(--text-muted);
-            font-size: 0.75rem;
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
+        .form-error {
+            font-size: 0.8rem;
+            color: var(--red);
+            margin-top: 12px;
+            display: none;
         }
 
-        .oauth-btn {
-            width: 100%;
-            padding: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 500;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: border-color 0.2s ease, background 0.2s ease;
-            margin-bottom: 10px;
-            text-decoration: none;
-        }
-
-        .oauth-btn:hover {
-            border-color: var(--text-muted);
-            background: var(--surface-hover);
-        }
-
-        .oauth-btn svg {
-            width: 18px;
-            height: 18px;
+        .form-error.visible {
+            display: block;
         }
 
         /* Account info (shown when logged in) */
         .account-info {
             display: none;
+        }
+
+        .account-info.visible {
+            display: block;
         }
 
         .account-card {
@@ -227,10 +332,17 @@
             margin-bottom: 16px;
         }
 
-        .account-card .email {
-            font-size: 0.9rem;
-            font-weight: 500;
+        .account-card .username {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
             margin-bottom: 4px;
+        }
+
+        .account-card .email {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
         }
 
         .account-card .plan {
@@ -292,6 +404,11 @@
             border-radius: 6px;
             color: var(--text);
             cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .token-row button:hover {
+            border-color: var(--accent);
         }
 
         .logout-btn {
@@ -315,7 +432,24 @@
 <body>
     <nav class="topbar">
         <a href="/" class="topbar-brand">Grab</a>
-        <a href="/" class="topbar-back">&larr; Retour</a>
+        <div class="topbar-actions">
+            <a href="/api.html" class="api-link">API</a>
+            <a href="/pro.html" class="pro-link">Pro</a>
+            <label class="theme-toggle" title="Changer de theme">
+                <input type="checkbox" id="themeSwitch">
+                <span class="toggle-track"></span>
+                <span class="toggle-thumb">
+                    <svg viewBox="0 0 16 16" id="themeIcon">
+                        <path d="M8 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 1zm0 11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 12zm7-4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5zM4 8a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1A.5.5 0 0 1 4 8zm8.5-3.8a.5.5 0 0 1 0 .7l-.7.7a.5.5 0 1 1-.7-.7l.7-.7a.5.5 0 0 1 .7 0zM5 11.3a.5.5 0 0 1 0 .7l-.7.7a.5.5 0 0 1-.7-.7l.7-.7a.5.5 0 0 1 .7 0zm7.7.7a.5.5 0 0 1-.7 0l-.7-.7a.5.5 0 0 1 .7-.7l.7.7a.5.5 0 0 1 0 .7zM5 4.6a.5.5 0 0 1-.7.7l-.7-.7a.5.5 0 0 1 .7-.7l.7.7zM8 5a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+                    </svg>
+                </span>
+            </label>
+            <a href="/account.html" class="account-btn" id="accountBtn" title="Mon compte">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                </svg>
+            </a>
+        </div>
     </nav>
 
     <div class="page">
@@ -324,44 +458,43 @@
             <h2>Connexion</h2>
 
             <div class="auth-tabs">
-                <div class="auth-tab active" data-tab="login">Se connecter</div>
-                <div class="auth-tab" data-tab="signup">Créer un compte</div>
+                <div class="auth-tab active" data-tab="login">Connexion</div>
+                <div class="auth-tab" data-tab="signup">Inscription</div>
             </div>
 
             <form class="auth-form active" id="loginForm">
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" placeholder="toi@email.com" required>
+                    <input type="email" id="loginEmail" placeholder="toi@email.com" required>
                 </div>
                 <div class="form-group">
                     <label>Mot de passe</label>
-                    <input type="password" placeholder="••••••••" required>
+                    <input type="password" id="loginPassword" placeholder="********" required>
                 </div>
-                <button type="submit" class="submit-btn">Se connecter</button>
+                <button type="submit" class="submit-btn" id="loginBtn">Se connecter</button>
+                <div class="form-error" id="loginError"></div>
             </form>
 
             <form class="auth-form" id="signupForm">
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" placeholder="toi@email.com" required>
+                    <input type="email" id="signupEmail" placeholder="toi@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="signupUsername" placeholder="ton_pseudo" required>
                 </div>
                 <div class="form-group">
                     <label>Mot de passe</label>
-                    <input type="password" placeholder="8 caractères minimum" required>
+                    <input type="password" id="signupPassword" placeholder="8 caracteres minimum" required>
                 </div>
-                <button type="submit" class="submit-btn">Créer mon compte</button>
+                <div class="form-group">
+                    <label>Confirmer le mot de passe</label>
+                    <input type="password" id="signupConfirm" placeholder="********" required>
+                </div>
+                <button type="submit" class="submit-btn" id="signupBtn">Creer mon compte</button>
+                <div class="form-error" id="signupError"></div>
             </form>
-
-            <div class="divider">ou</div>
-
-            <a href="#" class="oauth-btn">
-                <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                Continuer avec Google
-            </a>
-            <a href="#" class="oauth-btn">
-                <svg viewBox="0 0 24 24" fill="var(--text)"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                Continuer avec GitHub
-            </a>
         </div>
 
         <!-- Account (logged in) -->
@@ -369,24 +502,50 @@
             <h2>Mon compte</h2>
 
             <div class="account-card">
-                <div class="email">user@example.com</div>
-                <div class="plan">Plan Free — <a href="/pro.html" style="color: var(--gold);">Passer Pro</a></div>
+                <div class="username" id="accountUsername"></div>
+                <div class="email" id="accountEmail"></div>
+                <div class="plan" id="accountPlan"></div>
             </div>
 
             <div class="api-token">
                 <label>Token API</label>
                 <div class="token-row">
-                    <input type="text" value="grab_sk_7f3a9b2c1d..." readonly>
-                    <button onclick="navigator.clipboard.writeText(this.previousElementSibling.value)">Copier</button>
+                    <input type="password" id="apiTokenInput" value="" readonly>
+                    <button id="toggleTokenBtn">Afficher</button>
+                    <button id="copyTokenBtn">Copier</button>
                 </div>
             </div>
 
-            <button class="logout-btn">Se déconnecter</button>
+            <button class="logout-btn" id="logoutBtn">Se deconnecter</button>
         </div>
     </div>
 
     <script>
-        // Tabs
+        const API = window.location.origin + '/api';
+
+        // Theme toggle
+        const themeSwitch = document.getElementById('themeSwitch');
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeSwitch.checked = true;
+        }
+        themeSwitch.addEventListener('change', () => {
+            if (themeSwitch.checked) {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Elements
+        const authSection = document.getElementById('authSection');
+        const accountSection = document.getElementById('accountSection');
+        const accountBtn = document.getElementById('accountBtn');
+
+        // Tab switching
         document.querySelectorAll('.auth-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
@@ -395,6 +554,185 @@
                 document.getElementById(tab.dataset.tab + 'Form').classList.add('active');
             });
         });
+
+        // Show error
+        function showError(elementId, message) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.classList.add('visible');
+        }
+
+        function hideError(elementId) {
+            const el = document.getElementById(elementId);
+            el.textContent = '';
+            el.classList.remove('visible');
+        }
+
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError('loginError');
+
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+
+            if (!email || !password) {
+                showError('loginError', 'Remplis tous les champs.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Connexion...';
+
+            try {
+                const res = await fetch(`${API}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                if (!res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    throw new Error(data.detail || data.message || 'Email ou mot de passe incorrect.');
+                }
+
+                const data = await res.json();
+                localStorage.setItem('fetchr_token', data.token);
+                window.location.href = '/';
+            } catch (err) {
+                showError('loginError', err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Se connecter';
+            }
+        });
+
+        // Register form
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError('signupError');
+
+            const email = document.getElementById('signupEmail').value.trim();
+            const username = document.getElementById('signupUsername').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('signupConfirm').value;
+            const btn = document.getElementById('signupBtn');
+
+            if (!email || !username || !password || !confirm) {
+                showError('signupError', 'Remplis tous les champs.');
+                return;
+            }
+
+            if (password !== confirm) {
+                showError('signupError', 'Les mots de passe ne correspondent pas.');
+                return;
+            }
+
+            if (password.length < 8) {
+                showError('signupError', 'Le mot de passe doit contenir au moins 8 caracteres.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Creation...';
+
+            try {
+                const res = await fetch(`${API}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, username, password }),
+                });
+
+                if (!res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    throw new Error(data.detail || data.message || 'Erreur lors de la creation du compte.');
+                }
+
+                const data = await res.json();
+                localStorage.setItem('fetchr_token', data.token);
+                window.location.href = '/';
+            } catch (err) {
+                showError('signupError', err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Creer mon compte';
+            }
+        });
+
+        // Show account info
+        function showAccountInfo(user) {
+            authSection.style.display = 'none';
+            accountSection.classList.add('visible');
+
+            document.getElementById('accountUsername').textContent = user.username;
+            document.getElementById('accountEmail').textContent = user.email;
+
+            const planEl = document.getElementById('accountPlan');
+            if (user.is_pro) {
+                planEl.innerHTML = 'Plan <span class="badge">PRO</span>';
+            } else {
+                planEl.innerHTML = 'Plan Free — <a href="/pro.html" style="color: var(--gold);">Passer Pro</a>';
+            }
+
+            document.getElementById('apiTokenInput').value = user.api_token || '';
+
+            // Update topbar account button
+            accountBtn.classList.add('logged-in');
+            accountBtn.textContent = user.username.charAt(0).toUpperCase();
+        }
+
+        // Toggle token visibility
+        document.getElementById('toggleTokenBtn').addEventListener('click', () => {
+            const input = document.getElementById('apiTokenInput');
+            const btn = document.getElementById('toggleTokenBtn');
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = 'Masquer';
+            } else {
+                input.type = 'password';
+                btn.textContent = 'Afficher';
+            }
+        });
+
+        // Copy token
+        document.getElementById('copyTokenBtn').addEventListener('click', () => {
+            const input = document.getElementById('apiTokenInput');
+            navigator.clipboard.writeText(input.value);
+            const btn = document.getElementById('copyTokenBtn');
+            btn.textContent = 'Copie !';
+            setTimeout(() => { btn.textContent = 'Copier'; }, 1500);
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('fetchr_token');
+            window.location.reload();
+        });
+
+        // Check if already logged in
+        async function checkAuth() {
+            const token = localStorage.getItem('fetchr_token');
+            if (!token) return;
+
+            try {
+                const res = await fetch(`${API}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+
+                if (!res.ok) {
+                    localStorage.removeItem('fetchr_token');
+                    return;
+                }
+
+                const user = await res.json();
+                showAccountInfo(user);
+            } catch {
+                localStorage.removeItem('fetchr_token');
+            }
+        }
+
+        checkAuth();
     </script>
 </body>
 </html>
