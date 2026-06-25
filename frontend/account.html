@@ -507,6 +507,10 @@
                 <div class="plan" id="accountPlan"></div>
             </div>
 
+            <div id="billingSection" style="display:none; margin-bottom: 16px;">
+                <button class="submit-btn" id="manageSubBtn" style="background: linear-gradient(135deg, #f59e0b, #f97316);">Gerer mon abonnement</button>
+            </div>
+
             <div class="api-token">
                 <label>Token API</label>
                 <div class="token-row">
@@ -671,6 +675,7 @@
             const planEl = document.getElementById('accountPlan');
             if (user.is_pro) {
                 planEl.innerHTML = 'Plan <span class="badge">PRO</span>';
+                document.getElementById('billingSection').style.display = 'block';
             } else {
                 planEl.innerHTML = 'Plan Free — <a href="/pro.html" style="color: var(--gold);">Passer Pro</a>';
             }
@@ -680,6 +685,13 @@
             // Update topbar account button
             accountBtn.classList.add('logged-in');
             accountBtn.textContent = user.username.charAt(0).toUpperCase();
+
+            // Checkout success message
+            if (new URLSearchParams(window.location.search).get('checkout') === 'success') {
+                planEl.innerHTML = 'Plan <span class="badge">PRO</span> — Bienvenue !';
+                document.getElementById('billingSection').style.display = 'block';
+                history.replaceState(null, '', '/account.html');
+            }
         }
 
         // Toggle token visibility
@@ -702,6 +714,27 @@
             const btn = document.getElementById('copyTokenBtn');
             btn.textContent = 'Copie !';
             setTimeout(() => { btn.textContent = 'Copier'; }, 1500);
+        });
+
+        // Manage subscription (Stripe portal)
+        document.getElementById('manageSubBtn').addEventListener('click', async () => {
+            const token = localStorage.getItem('fetchr_token');
+            if (!token) return;
+            const btn = document.getElementById('manageSubBtn');
+            btn.disabled = true;
+            btn.textContent = 'Redirection...';
+            try {
+                const res = await fetch(`${API}/billing/portal`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                window.location.href = data.url;
+            } catch {
+                btn.disabled = false;
+                btn.textContent = 'Gerer mon abonnement';
+            }
         });
 
         // Logout

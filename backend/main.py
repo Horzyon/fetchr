@@ -7,14 +7,24 @@ import os
 import shutil
 from pathlib import Path
 from typing import Optional
+from datetime import datetime, timezone
 
-from fastapi import FastAPI, HTTPException, Header
+import stripe
+from fastapi import FastAPI, HTTPException, Header, Request
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from database import init_db, create_user, get_user_by_email, get_user_by_id
+from database import (
+    init_db, create_user, get_user_by_email, get_user_by_id,
+    get_user_by_stripe_customer, set_stripe_customer_id, set_user_pro,
+)
 from auth import hash_password, verify_password, create_token, decode_token
+
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+STRIPE_PRICE_ID = os.getenv("STRIPE_PRICE_ID", "price_1TmK9KHasvxF8FR0wgt7EBc7")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
 app = FastAPI(title="Fetchr API")
 
@@ -123,6 +133,92 @@ async def refresh(authorization: Optional[str] = Header(None)):
         raise HTTPException(401, "Token invalide ou expire")
     token = create_token(user["id"])
     return {"token": token}
+
+
+# --- Billing endpoints ---
+
+@app.post("/billing/checkout")
+async def billing_checkout(authorization: Optional[str] = Header(None)):
+    user = await _get_current_user(authorization)
+    if not user:
+        raise HTTPException(401, "Authentification requise")
+
+    customer_id = user.get("stripe_customer_id")
+    if not customer_id:
+        customer = stripe.Customer.create(
+            email=user["email"],
+            metadata={"fetchr_user_id": str(user["id"])},
+        )
+        customer_id = customer.id
+        await set_stripe_customer_id(user["id"], customer_id)
+
+    session = stripe.checkout.Session.create(
+        customer=customer_id,
+        mode="subscription",
+        line_items=[{"price": STRIPE_PRICE_ID, "quantity": 1}],
+        success_url=f"{FRONTEND_URL}/account.html?checkout=success",
+        cancel_url=f"{FRONTEND_URL}/pro.html",
+    )
+    return {"url": session.url}
+
+
+@app.post("/billing/portal")
+async def billing_portal(authorization: Optional[str] = Header(None)):
+    user = await _get_current_user(authorization)
+    if not user:
+        raise HTTPException(401, "Authentification requise")
+
+    customer_id = user.get("stripe_customer_id")
+    if not customer_id:
+        raise HTTPException(400, "Aucun abonnement actif")
+
+    session = stripe.billing_portal.Session.create(
+        customer=customer_id,
+        return_url=f"{FRONTEND_URL}/account.html",
+    )
+    return {"url": session.url}
+
+
+@app.post("/billing/webhook")
+async def billing_webhook(request: Request):
+    payload = await request.body()
+    sig_header = request.headers.get("stripe-signature")
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, STRIPE_WEBHOOK_SECRET
+        )
+    except (ValueError, stripe.error.SignatureVerificationError):
+        raise HTTPException(400, "Signature webhook invalide")
+
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        customer_id = session["customer"]
+        user = await get_user_by_stripe_customer(customer_id)
+        if user:
+            await set_user_pro(user["id"], True)
+
+    elif event["type"] == "customer.subscription.updated":
+        sub = event["data"]["object"]
+        customer_id = sub["customer"]
+        user = await get_user_by_stripe_customer(customer_id)
+        if user:
+            active = sub["status"] in ("active", "trialing")
+            expires_at = None
+            if active and sub.get("current_period_end"):
+                expires_at = datetime.fromtimestamp(
+                    sub["current_period_end"], tz=timezone.utc
+                ).isoformat()
+            await set_user_pro(user["id"], active, expires_at)
+
+    elif event["type"] == "customer.subscription.deleted":
+        sub = event["data"]["object"]
+        customer_id = sub["customer"]
+        user = await get_user_by_stripe_customer(customer_id)
+        if user:
+            await set_user_pro(user["id"], False)
+
+    return {"received": True}
 
 
 # --- Download models ---

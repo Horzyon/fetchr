@@ -408,12 +408,47 @@
                 const accountBtn = document.getElementById('accountBtn');
                 accountBtn.classList.add('logged-in');
                 accountBtn.textContent = user.username.charAt(0).toUpperCase();
+
+                if (user.is_pro) {
+                    const ctaBtn = document.querySelector('.cta-btn');
+                    ctaBtn.textContent = 'Deja Pro';
+                    ctaBtn.style.opacity = '0.6';
+                    ctaBtn.style.cursor = 'default';
+                    ctaBtn.style.pointerEvents = 'none';
+                }
             } catch {
                 localStorage.removeItem('fetchr_token');
             }
         }
 
         checkAuth();
+
+        // Checkout Stripe
+        document.querySelector('.cta-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const token = localStorage.getItem('fetchr_token');
+            if (!token) {
+                window.location.href = '/account.html';
+                return;
+            }
+
+            const btn = e.currentTarget;
+            btn.textContent = 'Redirection...';
+            btn.style.pointerEvents = 'none';
+
+            try {
+                const res = await fetch(`${API}/billing/checkout`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+                if (!res.ok) throw new Error('Erreur checkout');
+                const data = await res.json();
+                window.location.href = data.url;
+            } catch {
+                btn.textContent = 'Passer Pro';
+                btn.style.pointerEvents = '';
+            }
+        });
     </script>
 </body>
 </html>

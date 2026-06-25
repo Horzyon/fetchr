@@ -22,11 +22,18 @@ async def init_db():
                 password_hash TEXT NOT NULL,
                 is_pro INTEGER DEFAULT 0,
                 pro_expires_at TEXT,
+                stripe_customer_id TEXT,
                 api_token TEXT UNIQUE NOT NULL,
                 created_at TEXT NOT NULL
             )
         """)
         await db.commit()
+        # Migration: add stripe_customer_id if missing (existing DBs)
+        try:
+            await db.execute("ALTER TABLE users ADD COLUMN stripe_customer_id TEXT")
+            await db.commit()
+        except Exception:
+            pass
 
 
 async def create_user(email: str, username: str, password_hash: str) -> dict:
@@ -75,3 +82,33 @@ async def get_user_by_id(user_id: int) -> dict | None:
         if row is None:
             return None
         return dict(row)
+
+
+async def get_user_by_stripe_customer(customer_id: str) -> dict | None:
+    async with aiosqlite.connect(str(DB_PATH)) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute(
+            "SELECT * FROM users WHERE stripe_customer_id = ?", (customer_id,)
+        )
+        row = await cursor.fetchone()
+        if row is None:
+            return None
+        return dict(row)
+
+
+async def set_stripe_customer_id(user_id: int, customer_id: str):
+    async with aiosqlite.connect(str(DB_PATH)) as db:
+        await db.execute(
+            "UPDATE users SET stripe_customer_id = ? WHERE id = ?",
+            (customer_id, user_id),
+        )
+        await db.commit()
+
+
+async def set_user_pro(user_id: int, is_pro: bool, expires_at: str | None = None):
+    async with aiosqlite.connect(str(DB_PATH)) as db:
+        await db.execute(
+            "UPDATE users SET is_pro = ?, pro_expires_at = ? WHERE id = ?",
+            (int(is_pro), expires_at, user_id),
+        )
+        await db.commit()

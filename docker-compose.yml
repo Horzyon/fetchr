@@ -3,6 +3,10 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - fetchr-data:/data
     restart: unless-stopped
 
   frontend:
@@ -12,3 +16,6 @@ services:
     volumes:
       - ./frontend:/usr/share/nginx/html:ro
     restart: unless-stopped
+
+volumes:
+  fetchr-data:
