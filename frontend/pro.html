@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grab Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0f;
+            --surface: #14141f;
+            --surface-hover: #1c1c2a;
+            --border: #2a2a3a;
+            --text: #e8e8f0;
+            --text-muted: #6b6b80;
+            --accent: #6366f1;
+            --gold: #f59e0b;
+            --radius: 12px;
+        }
+
+        [data-theme="light"] {
+            --bg: #f4f4f8;
+            --surface: #ffffff;
+            --surface-hover: #eeeef2;
+            --border: #d8d8e0;
+            --text: #1a1a2e;
+            --text-muted: #6b6b80;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0 20px;
+        }
+
+        .page {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        /* Nav */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .topbar-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .topbar-back {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .topbar-back:hover { color: var(--text); }
+
+        /* Hero */
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            letter-spacing: -0.03em;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 .brand {
+            background: linear-gradient(135deg, #6366f1, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 40px;
+        }
+
+        /* What you get — simple list */
+        .perks {
+            text-align: left;
+            margin-bottom: 36px;
+        }
+
+        .perk {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .perk:last-child { border-bottom: none; }
+
+        .perk-check {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .perk-check svg {
+            width: 11px;
+            height: 11px;
+            fill: #fff;
+        }
+
+        /* CTA */
+        .cta {
+            margin-top: 36px;
+        }
+
+        .price {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .price span {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .cta-btn {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.15s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.35);
+        }
+
+        .fine-print {
+            margin-top: 12px;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <nav class="topbar">
+        <a href="/" class="topbar-brand">Grab</a>
+        <a href="/" class="topbar-back">&larr; Retour</a>
+    </nav>
+
+    <div class="page">
+        <section class="hero">
+            <h1><span class="brand">Grab</span> Pro</h1>
+            <p>4K, FLAC, illimité, prioritaire.</p>
+        </section>
+
+        <div class="perks">
+            <div class="perk">
+                <div class="perk-check"><svg viewBox="0 0 12 12"><path d="M10 3L4.5 8.5 2 6"/></svg></div>
+                Vidéo jusqu'en 4K
+            </div>
+            <div class="perk">
+                <div class="perk-check"><svg viewBox="0 0 12 12"><path d="M10 3L4.5 8.5 2 6"/></svg></div>
+                Audio FLAC &amp; MP3 320kbps
+            </div>
+            <div class="perk">
+                <div class="perk-check"><svg viewBox="0 0 12 12"><path d="M10 3L4.5 8.5 2 6"/></svg></div>
+                Downloads illimités
+            </div>
+            <div class="perk">
+                <div class="perk-check"><svg viewBox="0 0 12 12"><path d="M10 3L4.5 8.5 2 6"/></svg></div>
+                Pré-fetch prioritaire
+            </div>
+            <div class="perk">
+                <div class="perk-check"><svg viewBox="0 0 12 12"><path d="M10 3L4.5 8.5 2 6"/></svg></div>
+                API — 1000 req/jour
+            </div>
+        </div>
+
+        <div class="cta">
+            <div class="price">4€ <span>/mois</span></div>
+            <a href="#" class="cta-btn">Passer Pro</a>
+            <div class="fine-print">Sans engagement · Remboursé sous 7 jours</div>
+        </div>
+    </div>
+</body>
+</html>

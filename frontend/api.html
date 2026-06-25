@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grab API — Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0f;
+            --surface: #14141f;
+            --surface-hover: #1c1c2a;
+            --border: #2a2a3a;
+            --text: #e8e8f0;
+            --text-muted: #6b6b80;
+            --accent: #6366f1;
+            --green: #22c55e;
+            --red: #ff2d2d;
+            --cyan: #00f2ea;
+            --gold: #f59e0b;
+            --radius: 12px;
+        }
+
+        [data-theme="light"] {
+            --bg: #f4f4f8;
+            --surface: #ffffff;
+            --surface-hover: #eeeef2;
+            --border: #d8d8e0;
+            --text: #1a1a2e;
+            --text-muted: #6b6b80;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0 20px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .page {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 60px 0 80px;
+        }
+
+        /* Nav */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .topbar-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .topbar-back {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .topbar-back:hover { color: var(--text); }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 48px;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 500px;
+        }
+
+        /* Base URL */
+        .base-url {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin-top: 16px;
+            color: var(--accent);
+        }
+
+        .base-url .method {
+            color: var(--green);
+            font-weight: 500;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Endpoint cards */
+        .endpoint {
+            margin-bottom: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .endpoint-method {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .endpoint-method.post {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .endpoint-method.get {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .endpoint-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .endpoint-desc {
+            padding: 14px 18px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .endpoint-body {
+            padding: 0 18px 18px;
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: #0d0d14;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        [data-theme="light"] .code-block {
+            background: #f8f8fc;
+        }
+
+        .code-block .comment { color: var(--text-muted); }
+        .code-block .string { color: var(--cyan); }
+        .code-block .key { color: var(--gold); }
+        .code-block .method { color: var(--green); }
+        .code-block .url { color: var(--accent); }
+
+        .code-label {
+            font-size: 0.65rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        /* Params table */
+        .params {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+
+        .params th {
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .params td {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .params .param-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--gold);
+        }
+
+        .params .param-type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .params .param-desc {
+            color: var(--text-muted);
+        }
+
+        .param-required {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--red);
+            margin-left: 4px;
+        }
+
+        /* Auth section */
+        .auth-box {
+            padding: 16px 18px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+        }
+
+        .auth-box code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            background: var(--surface-hover);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .auth-box p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Rate limits */
+        .limits {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .limit-card {
+            padding: 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .limit-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .limit-value.free { color: var(--accent); }
+        .limit-value.pro { color: var(--gold); }
+
+        .limit-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 500px) {
+            .limits {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="topbar">
+        <a href="/" class="topbar-brand">Grab</a>
+        <a href="/" class="topbar-back">&larr; Retour</a>
+    </nav>
+
+    <div class="page">
+        <section class="hero">
+            <h1>API</h1>
+            <p>Trois endpoints. Un token. Intègre Grab dans tes scripts, bots, ou apps.</p>
+            <div class="base-url">
+                <span>https://api.grab.download/v1</span>
+            </div>
+        </section>
+
+        <!-- Auth -->
+        <section class="section">
+            <div class="section-title">Authentification</div>
+            <div class="auth-box">
+                <p>Ajoute ton token dans le header de chaque requête :</p>
+                <div class="code-block" style="margin-top: 12px;">
+<span class="key">Authorization</span>: Bearer <span class="string">grab_sk_xxxxxxxxxxxx</span>
+                </div>
+                <p style="margin-top: 12px;">Génère ton token dans les <a href="#" style="color: var(--accent);">paramètres de ton compte</a>.</p>
+            </div>
+        </section>
+
+        <!-- Rate limits -->
+        <section class="section">
+            <div class="section-title">Limites</div>
+            <div class="limits">
+                <div class="limit-card">
+                    <div class="limit-value free">50</div>
+                    <div class="limit-label">requêtes/jour (Free)</div>
+                </div>
+                <div class="limit-card">
+                    <div class="limit-value pro">1000</div>
+                    <div class="limit-label">requêtes/jour (Pro)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Endpoints -->
+        <section class="section">
+            <div class="section-title">Endpoints</div>
+
+            <!-- POST /prepare -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="endpoint-method post">POST</span>
+                    <span class="endpoint-path">/prepare</span>
+                </div>
+                <div class="endpoint-desc">
+                    Lance le pré-fetch d'une vidéo. Retourne les métadonnées et un session_id.
+                </div>
+                <div class="endpoint-body">
+                    <div class="code-label">Requête</div>
+                    <div class="code-block">
+<span class="method">POST</span> <span class="url">/v1/prepare</span>
+
+{
+  <span class="key">"url"</span>: <span class="string">"https://youtube.com/watch?v=dQw4w9WgXcQ"</span>
+}
+                    </div>
+
+                    <div class="code-label" style="margin-top: 16px;">Réponse</div>
+                    <div class="code-block">
+{
+  <span class="key">"session_id"</span>: <span class="string">"a1b2c3d4"</span>,
+  <span class="key">"title"</span>: <span class="string">"Rick Astley - Never Gonna Give You Up"</span>,
+  <span class="key">"thumbnail"</span>: <span class="string">"https://i.ytimg.com/vi/.../maxresdefault.jpg"</span>,
+  <span class="key">"duration"</span>: <span class="string">"3:33"</span>,
+  <span class="key">"views"</span>: 1786000000
+}
+                    </div>
+                </div>
+            </div>
+
+            <!-- GET /status -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="endpoint-method get">GET</span>
+                    <span class="endpoint-path">/status/{session_id}</span>
+                </div>
+                <div class="endpoint-desc">
+                    Vérifie si le pré-fetch est terminé. Poll jusqu'à ce que les deux soient <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--green);">true</code>.
+                </div>
+                <div class="endpoint-body">
+                    <div class="code-label">Réponse</div>
+                    <div class="code-block">
+{
+  <span class="key">"video_ready"</span>: <span class="method">true</span>,
+  <span class="key">"audio_ready"</span>: <span class="method">true</span>
+}
+                    </div>
+                </div>
+            </div>
+
+            <!-- POST /download -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="endpoint-method post">POST</span>
+                    <span class="endpoint-path">/download</span>
+                </div>
+                <div class="endpoint-desc">
+                    Télécharge le fichier converti. Retourne un stream binaire (le fichier).
+                </div>
+                <div class="endpoint-body">
+                    <div class="code-label">Requête</div>
+                    <div class="code-block">
+<span class="method">POST</span> <span class="url">/v1/download</span>
+
+{
+  <span class="key">"session_id"</span>: <span class="string">"a1b2c3d4"</span>,
+  <span class="key">"format"</span>: <span class="string">"video"</span>,
+  <span class="key">"quality"</span>: <span class="string">"1080p"</span>
+}
+                    </div>
+
+                    <table class="params">
+                        <thead>
+                            <tr><th>Param</th><th>Type</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="param-name">session_id</span><span class="param-required">requis</span></td>
+                                <td><span class="param-type">string</span></td>
+                                <td class="param-desc">ID retourné par /prepare</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">format</span><span class="param-required">requis</span></td>
+                                <td><span class="param-type">string</span></td>
+                                <td class="param-desc">"video" ou "audio"</td>
+                            </tr>
+                            <tr>
+                                <td><span class="param-name">quality</span><span class="param-required">requis</span></td>
+                                <td><span class="param-type">string</span></td>
+                                <td class="param-desc">4k, 1080p, 720p, 480p, flac, mp3_320, mp3_128, m4a_128</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick example -->
+        <section class="section">
+            <div class="section-title">Exemple complet</div>
+            <div class="code-block">
+<span class="comment"># 1. Prépare la vidéo</span>
+<span class="method">SESSION</span>=$(curl -s -X POST https://api.grab.download/v1/prepare \
+  -H <span class="string">"Authorization: Bearer grab_sk_xxxx"</span> \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">'{"url": "https://youtube.com/watch?v=dQw4w9WgXcQ"}'</span> \
+  | jq -r .session_id)
+
+<span class="comment"># 2. Attends que ce soit prêt</span>
+while ! curl -s https://api.grab.download/v1/status/$SESSION | jq -e '.video_ready' > /dev/null; do
+  sleep 2
+done
+
+<span class="comment"># 3. Télécharge</span>
+curl -s -X POST https://api.grab.download/v1/download \
+  -H <span class="string">"Authorization: Bearer grab_sk_xxxx"</span> \
+  -H <span class="string">"Content-Type: application/json"</span> \
+  -d <span class="string">"{\"session_id\": \"$SESSION\", \"format\": \"video\", \"quality\": \"1080p\"}"</span> \
+  -o <span class="string">video.mp4</span>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
