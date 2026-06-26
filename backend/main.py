@@ -356,13 +356,16 @@ async def status(session_id: str):
 # --- Pré-fetch ---
 
 async def _fetch_meta(url: str) -> dict | None:
+    import logging
+    logger = logging.getLogger("fetchr")
     proc = await asyncio.create_subprocess_exec(
         "yt-dlp", "--dump-json", "--no-download", url,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
-    stdout, _ = await proc.communicate()
+    stdout, stderr = await proc.communicate()
     if proc.returncode != 0:
+        logger.warning(f"yt-dlp failed for {url!r}: exit={proc.returncode} stderr={stderr.decode()[:500]}")
         return None
     return json.loads(stdout)
 
