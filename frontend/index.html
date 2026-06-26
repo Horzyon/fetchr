@@ -1037,8 +1037,20 @@
             return n + ' vues';
         }
 
+        let prefetchReady = false;
+
+        function setButtonsEnabled(enabled) {
+            document.querySelectorAll('.format-btn:not(.locked)').forEach(btn => {
+                btn.disabled = !enabled;
+                btn.style.opacity = enabled ? '1' : '0.4';
+                btn.style.pointerEvents = enabled ? 'auto' : 'none';
+            });
+        }
+
         // Poll prefetch status
         function startStatusPoll(sessionId) {
+            prefetchReady = false;
+            setButtonsEnabled(false);
             if (pollInterval) clearInterval(pollInterval);
             pollInterval = setInterval(async () => {
                 try {
@@ -1047,6 +1059,8 @@
                     if (s.video_ready && s.audio_ready) {
                         statusBar.classList.add('ready');
                         statusText.textContent = 'Prêt — choisis ton format';
+                        prefetchReady = true;
+                        setButtonsEnabled(true);
                         clearInterval(pollInterval);
                     } else if (s.video_ready) {
                         statusText.textContent = 'Vidéo prête, audio en cours...';
@@ -1066,7 +1080,7 @@
 
         document.querySelectorAll('.format-btn:not(.locked)').forEach(btn => {
             btn.addEventListener('click', async () => {
-                if (!currentSession) return;
+                if (!currentSession || !prefetchReady) return;
 
                 const format = btn.dataset.format;
                 const quality = btn.dataset.quality;
