@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -fsSL https://deno.land/install.sh | DENO_INSTALL=/usr/local sh
 RUN pip install --no-cache-dir yt-dlp
 
+RUN mkdir -p /root/.config/yt-dlp && \
+    echo "--remote-components ejs:github" > /root/.config/yt-dlp/config
+
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
