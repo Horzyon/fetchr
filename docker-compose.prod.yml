@@ -21,11 +21,11 @@ services:
     env_file:
       - .env
     volumes:
-      - fetchr_data:/data
+      - fetchr-data:/data
       - ./cookies.txt:/app/cookies.txt
     restart: unless-stopped
 
 volumes:
   caddy_data:
   caddy_config:
-  fetchr_data:
+  fetchr-data:
