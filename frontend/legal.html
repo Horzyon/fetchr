@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentions légales - Fetchr</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #14141f;
+            --surface-hover: #1c1c2a;
+            --border: #2a2a3a;
+            --text: #e8e8f0;
+            --text-muted: #6b6b80;
+            --accent: #6366f1;
+            --radius: 12px;
+        }
+
+        [data-theme="light"] {
+            --bg: #f4f4f8;
+            --surface: #ffffff;
+            --surface-hover: #eeeef2;
+            --border: #d8d8e0;
+            --text: #1a1a2e;
+            --text-muted: #6b6b80;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Topbar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .topbar-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-actions a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .topbar-actions a:hover {
+            color: var(--text);
+        }
+
+        .account-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--surface-hover);
+            border: 1px solid var(--border);
+            transition: border-color 0.2s;
+        }
+
+        .account-btn:hover {
+            border-color: var(--accent);
+        }
+
+        .account-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-muted);
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .toggle-track {
+            width: 40px;
+            height: 22px;
+            background: var(--surface-hover);
+            border: 1px solid var(--border);
+            border-radius: 11px;
+            transition: background 0.2s;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            left: 3px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            transition: left 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-thumb svg {
+            width: 10px;
+            height: 10px;
+            fill: white;
+        }
+
+        .theme-toggle input:checked ~ .toggle-thumb {
+            left: 21px;
+        }
+
+        /* Content */
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+        .page-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .section p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .section a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .section a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .topbar {
+                padding: 12px 16px;
+            }
+
+            .container {
+                padding: 32px 16px 60px;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="topbar">
+        <a href="/" class="topbar-brand">Fetchr</a>
+        <div class="topbar-actions">
+            <a href="/api.html" class="api-link">API</a>
+            <a href="/pro.html" class="pro-link">Pro</a>
+            <label class="theme-toggle" title="Changer de thème">
+                <input type="checkbox" id="themeSwitch">
+                <span class="toggle-track"></span>
+                <span class="toggle-thumb">
+                    <svg viewBox="0 0 16 16"><path d="M8 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 1zm0 11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 12zm7-4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5zM4 8a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1A.5.5 0 0 1 4 8zm8.5-3.8a.5.5 0 0 1 0 .7l-.7.7a.5.5 0 1 1-.7-.7l.7-.7a.5.5 0 0 1 .7 0zM5 11.3a.5.5 0 0 1 0 .7l-.7.7a.5.5 0 0 1-.7-.7l.7-.7a.5.5 0 0 1 .7 0zm7.7.7a.5.5 0 0 1-.7 0l-.7-.7a.5.5 0 0 1 .7-.7l.7.7a.5.5 0 0 1 0 .7zM5 4.6a.5.5 0 0 1-.7.7l-.7-.7a.5.5 0 0 1 .7-.7l.7.7zM8 5a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+                </span>
+            </label>
+            <a href="/account.html" class="account-btn" id="accountBtn" title="Mon compte">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1 class="page-title">Mentions légales</h1>
+
+        <div class="section">
+            <h2>Éditeur du site</h2>
+            <p>Fetchr.fr est édité par Enzo Crepol, micro-entrepreneur.<br>Email : contact@fetchr.fr</p>
+        </div>
+
+        <div class="section">
+            <h2>Hébergement</h2>
+            <p>OVH SAS, 2 rue Kellermann, 59100 Roubaix, France.</p>
+        </div>
+
+        <div class="section">
+            <h2>Directeur de la publication</h2>
+            <p>Enzo Crepol.</p>
+        </div>
+
+        <div class="section">
+            <h2>Propriété intellectuelle</h2>
+            <p>Tous les contenus présents sur ce site (textes, design, code source) sont la propriété exclusive de Fetchr. Toute reproduction, même partielle, est interdite sans autorisation préalable.</p>
+        </div>
+
+        <div class="section">
+            <h2>Protection des données</h2>
+            <p>Pour en savoir plus sur la collecte et le traitement de vos données personnelles, consultez notre <a href="/privacy.html">politique de confidentialité</a>.</p>
+        </div>
+
+        <div class="section">
+            <h2>Cookies</h2>
+            <p>Les informations relatives aux cookies sont détaillées dans la section dédiée de notre <a href="/privacy.html">politique de confidentialité</a>.</p>
+        </div>
+
+        <div class="section">
+            <h2>Crédits</h2>
+            <p>Typographies Space Grotesk et Inter (Google Fonts). Icônes SVG personnalisées.</p>
+        </div>
+    </main>
+
+    <script>
+        const themeSwitch = document.getElementById('themeSwitch');
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeSwitch.checked = true;
+        }
+        themeSwitch.addEventListener('change', () => {
+            if (themeSwitch.checked) {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -674,6 +674,36 @@
                 opacity: 0.4;
             }
         }
+
+        /* Footer disclaimer */
+        .site-footer {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            padding: 40px 20px 20px;
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .site-footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: text-decoration 0.2s ease;
+        }
+
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .site-footer .footer-links {
+            margin-top: 6px;
+        }
+
+        .site-footer .footer-sep {
+            margin: 0 6px;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -1192,5 +1222,16 @@
             }
         });
     </script>
+
+    <footer class="site-footer">
+        <p>En utilisant Fetchr, vous acceptez nos <a href="/terms.html">CGU</a>. Le t&eacute;l&eacute;chargement de contenus prot&eacute;g&eacute;s par le droit d'auteur est interdit.</p>
+        <p class="footer-links">
+            <a href="/terms.html">CGU</a>
+            <span class="footer-sep">&middot;</span>
+            <a href="/privacy.html">Confidentialit&eacute;</a>
+            <span class="footer-sep">&middot;</span>
+            <a href="/contact.html">Contact</a>
+        </p>
+    </footer>
 </body>
 </html>

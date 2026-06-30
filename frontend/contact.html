@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetchr — Contact</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0f;
+            --surface: #14141f;
+            --surface-hover: #1c1c2a;
+            --border: #2a2a3a;
+            --text: #e8e8f0;
+            --text-muted: #6b6b80;
+            --accent: #6366f1;
+            --glow: #6366f1;
+            --radius: 12px;
+        }
+
+        [data-theme="light"] {
+            --bg: #f4f4f8;
+            --surface: #ffffff;
+            --surface-hover: #eeeef2;
+            --border: #d8d8e0;
+            --text: #1a1a2e;
+            --text-muted: #6b6b80;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 20px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Top bar */
+        .topbar {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .topbar-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .api-link {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            transition: color 0.2s ease, border-color 0.2s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        .api-link:hover {
+            color: var(--text);
+            border-color: var(--glow);
+        }
+
+        .pro-link {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #f59e0b;
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .pro-link:hover {
+            background: #f59e0b;
+            color: #fff;
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .theme-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-track {
+            position: absolute;
+            inset: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            transition: transform 0.3s ease, background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-thumb svg {
+            width: 11px;
+            height: 11px;
+            fill: var(--bg);
+        }
+
+        .theme-toggle input:checked ~ .toggle-thumb {
+            transform: translateX(20px);
+            background: var(--glow);
+        }
+
+        /* Account button */
+        .account-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+            text-decoration: none;
+        }
+
+        .account-btn:hover {
+            border-color: var(--glow);
+        }
+
+        .account-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-muted);
+        }
+
+        /* Page content */
+        .page {
+            max-width: 540px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 0 80px;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+
+        .page-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        /* Form */
+        .contact-form {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6b80' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-status {
+            margin-top: 12px;
+            font-size: 0.85rem;
+            text-align: center;
+            display: none;
+        }
+
+        .form-status.success {
+            color: #22c55e;
+            display: block;
+        }
+
+        .form-status.error {
+            color: #ef4444;
+            display: block;
+        }
+
+        /* Info section */
+        .info-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .info-section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-item .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            min-width: 100px;
+        }
+
+        .contact-item a {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* FAQ notice */
+        .faq-notice {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 28px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .faq-notice a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .faq-notice a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .page {
+                padding: 24px 0 60px;
+            }
+
+            .contact-form,
+            .info-section,
+            .faq-notice {
+                padding: 20px;
+            }
+
+            .contact-item {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .contact-item .label {
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="topbar">
+        <a href="/" class="topbar-brand">Fetchr</a>
+        <div class="topbar-actions">
+            <a href="/api.html" class="api-link">API</a>
+            <a href="/pro.html" class="pro-link">Pro</a>
+            <label class="theme-toggle" title="Changer de thème">
+                <input type="checkbox" id="themeSwitch">
+                <span class="toggle-track"></span>
+                <span class="toggle-thumb">
+                    <svg viewBox="0 0 16 16"><path d="M8 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 1zm0 11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 12zm7-4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5zM4 8a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1A.5.5 0 0 1 4 8zm8.5-3.8a.5.5 0 0 1 0 .7l-.7.7a.5.5 0 1 1-.7-.7l.7-.7a.5.5 0 0 1 .7 0zM5 11.3a.5.5 0 0 1 0 .7l-.7.7a.5.5 0 0 1-.7-.7l.7-.7a.5.5 0 0 1 .7 0zm7.7.7a.5.5 0 0 1-.7 0l-.7-.7a.5.5 0 0 1 .7-.7l.7.7a.5.5 0 0 1 0 .7zM5 4.6a.5.5 0 0 1-.7.7l-.7-.7a.5.5 0 0 1 .7-.7l.7.7zM8 5a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+                </span>
+            </label>
+            <a href="/account.html" class="account-btn" id="accountBtn" title="Mon compte">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            </a>
+        </div>
+    </nav>
+
+    <main class="page">
+        <h1>Contact</h1>
+        <p class="page-subtitle">Notre équipe répond sous 24h (jours ouvrés).</p>
+
+        <form class="contact-form" id="contactForm">
+            <div class="form-group">
+                <label for="name">Nom</label>
+                <input type="text" id="name" name="name" placeholder="Votre nom" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="votre@email.com" required>
+            </div>
+            <div class="form-group">
+                <label for="subject">Sujet</label>
+                <select id="subject" name="subject" required>
+                    <option value="" disabled selected>Choisir un sujet</option>
+                    <option value="general">Question générale</option>
+                    <option value="bug">Signaler un bug</option>
+                    <option value="billing">Facturation / Abonnement</option>
+                    <option value="api">API / Intégration</option>
+                    <option value="privacy">RGPD / Données personnelles</option>
+                    <option value="other">Autre</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" placeholder="Décrivez votre demande..." required></textarea>
+            </div>
+            <button type="submit" class="submit-btn" id="submitBtn">Envoyer</button>
+            <p class="form-status" id="formStatus"></p>
+        </form>
+
+        <div class="info-section">
+            <h2>Contact direct</h2>
+            <div class="contact-item">
+                <span class="label">Support</span>
+                <a href="mailto:support@fetchr.fr">support@fetchr.fr</a>
+            </div>
+            <div class="contact-item">
+                <span class="label">Facturation</span>
+                <a href="mailto:billing@fetchr.fr">billing@fetchr.fr</a>
+            </div>
+            <div class="contact-item">
+                <span class="label">RGPD / Légal</span>
+                <a href="mailto:privacy@fetchr.fr">privacy@fetchr.fr</a>
+            </div>
+        </div>
+
+        <div class="faq-notice">
+            Consultez d'abord notre <a href="/faq.html">FAQ</a>, votre réponse s'y trouve peut-être.
+        </div>
+    </main>
+
+    <script>
+        // Theme toggle
+        const themeSwitch = document.getElementById('themeSwitch');
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeSwitch.checked = true;
+        }
+        themeSwitch.addEventListener('change', () => {
+            if (themeSwitch.checked) {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Contact form
+        const contactForm = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formStatus = document.getElementById('formStatus');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Envoi en cours...';
+            formStatus.className = 'form-status';
+            formStatus.style.display = 'none';
+
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
+            try {
+                const res = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (res.ok) {
+                    formStatus.textContent = 'Message envoyé avec succès. Nous reviendrons vers vous rapidement.';
+                    formStatus.className = 'form-status success';
+                    contactForm.reset();
+                } else {
+                    throw new Error('Erreur serveur');
+                }
+            } catch (err) {
+                formStatus.textContent = 'Erreur lors de l\'envoi. Veuillez réessayer ou nous contacter par email.';
+                formStatus.className = 'form-status error';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Envoyer';
+            }
+        });
+    </script>
+</body>
+</html>

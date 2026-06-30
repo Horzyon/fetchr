@@ -453,6 +453,59 @@
             margin-top: 2px;
         }
 
+        /* Tabbed code examples */
+        .tabs-container {
+            position: relative;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 0;
+        }
+
+        .tab-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            font-weight: 500;
+            padding: 5px 12px;
+            border: 1px solid var(--border);
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+            background: var(--surface-hover);
+        }
+
+        .tab-btn.active {
+            background: #0d0d14;
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        [data-theme="light"] .tab-btn.active {
+            background: #f8f8fc;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .tabs-container .code-block {
+            border-top-left-radius: 0;
+            margin-top: 0;
+        }
+
         /* Responsive */
         @media (max-width: 500px) {
             .limits {
@@ -626,7 +679,15 @@
         <!-- Quick example -->
         <section class="section">
             <div class="section-title">Exemple complet</div>
-            <div class="code-block">
+            <div class="tabs-container">
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-tab="bash">Bash</button>
+                    <button class="tab-btn" data-tab="python">Python</button>
+                    <button class="tab-btn" data-tab="javascript">JavaScript</button>
+                </div>
+
+                <div class="tab-panel active" data-tab="bash">
+                    <div class="code-block">
 <span class="comment"># 1. Prepare la video</span>
 <span class="method">SESSION</span>=$(curl -s -X POST https://api.fetchr.fr/v1/prepare \
   -H <span class="string">"Authorization: Bearer fetchr_sk_xxxx"</span> \
@@ -645,9 +706,73 @@ curl -s -X POST https://api.fetchr.fr/v1/download \
   -H <span class="string">"Content-Type: application/json"</span> \
   -d <span class="string">"{\"session_id\": \"$SESSION\", \"format\": \"video\", \"quality\": \"1080p\"}"</span> \
   -o <span class="string">video.mp4</span>
+                    </div>
+                </div>
+
+                <div class="tab-panel" data-tab="python">
+                    <div class="code-block">
+<span class="key">import</span> requests
+<span class="key">import</span> time
+
+API = <span class="string">"https://api.fetchr.fr/v1"</span>
+TOKEN = <span class="string">"fetchr_sk_xxxxxxxxxxxx"</span>
+headers = {<span class="string">"Authorization"</span>: <span class="key">f</span><span class="string">"Bearer {TOKEN}"</span>, <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>}
+
+<span class="comment"># 1. Prepare</span>
+r = requests.<span class="method">post</span>(<span class="key">f</span><span class="string">"{API}/prepare"</span>, json={<span class="string">"url"</span>: <span class="string">"https://youtube.com/watch?v=dQw4w9WgXcQ"</span>}, headers=headers)
+session_id = r.json()[<span class="string">"session_id"</span>]
+
+<span class="comment"># 2. Wait</span>
+<span class="key">while</span> True:
+    status = requests.<span class="method">get</span>(<span class="key">f</span><span class="string">"{API}/status/{session_id}"</span>).json()
+    <span class="key">if</span> status[<span class="string">"video_ready"</span>] <span class="key">and</span> status[<span class="string">"audio_ready"</span>]:
+        <span class="key">break</span>
+    time.sleep(2)
+
+<span class="comment"># 3. Download</span>
+r = requests.<span class="method">post</span>(<span class="key">f</span><span class="string">"{API}/download"</span>, json={<span class="string">"session_id"</span>: session_id, <span class="string">"format"</span>: <span class="string">"video"</span>, <span class="string">"quality"</span>: <span class="string">"1080p"</span>}, headers=headers)
+<span class="key">with</span> open(<span class="string">"video.mp4"</span>, <span class="string">"wb"</span>) <span class="key">as</span> f:
+    f.write(r.content)
+                    </div>
+                </div>
+
+                <div class="tab-panel" data-tab="javascript">
+                    <div class="code-block">
+<span class="key">const</span> API = <span class="string">"https://api.fetchr.fr/v1"</span>;
+<span class="key">const</span> TOKEN = <span class="string">"fetchr_sk_xxxxxxxxxxxx"</span>;
+<span class="key">const</span> headers = { <span class="string">"Authorization"</span>: <span class="string">`Bearer ${TOKEN}`</span>, <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span> };
+
+<span class="comment">// 1. Prepare</span>
+<span class="key">const</span> { session_id } = <span class="key">await</span> <span class="method">fetch</span>(<span class="string">`${API}/prepare`</span>, {
+  method: <span class="string">"POST"</span>, headers, body: JSON.<span class="method">stringify</span>({ url: <span class="string">"https://youtube.com/watch?v=dQw4w9WgXcQ"</span> })
+}).then(r =&gt; r.json());
+
+<span class="comment">// 2. Wait</span>
+<span class="key">while</span> (true) {
+  <span class="key">const</span> status = <span class="key">await</span> <span class="method">fetch</span>(<span class="string">`${API}/status/${session_id}`</span>).then(r =&gt; r.json());
+  <span class="key">if</span> (status.video_ready &amp;&amp; status.audio_ready) <span class="key">break</span>;
+  <span class="key">await new</span> Promise(r =&gt; setTimeout(r, 2000));
+}
+
+<span class="comment">// 3. Download</span>
+<span class="key">const</span> blob = <span class="key">await</span> <span class="method">fetch</span>(<span class="string">`${API}/download`</span>, {
+  method: <span class="string">"POST"</span>, headers, body: JSON.<span class="method">stringify</span>({ session_id, format: <span class="string">"video"</span>, quality: <span class="string">"1080p"</span> })
+}).then(r =&gt; r.blob());
+                    </div>
+                </div>
             </div>
         </section>
     </div>
+
+    <footer style="width:100%;max-width:720px;margin:0 auto;padding:40px 20px 20px;text-align:center;font-size:0.72rem;color:var(--text-muted);">
+        <a href="/terms.html" style="color:var(--text-muted);text-decoration:none;">CGU</a>
+        <span style="margin:0 8px;">·</span>
+        <a href="/privacy.html" style="color:var(--text-muted);text-decoration:none;">Confidentialité</a>
+        <span style="margin:0 8px;">·</span>
+        <a href="/contact.html" style="color:var(--text-muted);text-decoration:none;">Contact</a>
+        <span style="margin:0 8px;">·</span>
+        <a href="/faq.html" style="color:var(--text-muted);text-decoration:none;">FAQ</a>
+    </footer>
 
     <script>
         const API = window.location.origin + '/api';
@@ -694,6 +819,18 @@ curl -s -X POST https://api.fetchr.fr/v1/download \
         }
 
         checkAuth();
+
+        // Tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.dataset.tab;
+                const container = btn.closest('.tabs-container');
+                container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                container.querySelector(`.tab-panel[data-tab="${tab}"]`).classList.add('active');
+            });
+        });
     </script>
 </body>
 </html>

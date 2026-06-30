@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGU - Fetchr.fr</title>
+    <meta name="description" content="Conditions Générales d'Utilisation de Fetchr.fr">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #14141f;
+            --surface-hover: #1c1c2a;
+            --border: #2a2a3a;
+            --text: #e8e8f0;
+            --text-muted: #6b6b80;
+            --accent: #6366f1;
+            --radius: 12px;
+        }
+
+        [data-theme="light"] {
+            --bg: #f4f4f8;
+            --surface: #ffffff;
+            --surface-hover: #eeeef2;
+            --border: #d8d8e0;
+            --text: #1a1a2e;
+            --text-muted: #6b6b80;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Topbar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 32px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-brand {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .api-link, .pro-link {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .api-link:hover, .pro-link:hover {
+            color: var(--text);
+        }
+
+        .account-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--surface-hover);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+
+        .account-btn:hover {
+            background: var(--border);
+        }
+
+        .account-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-muted);
+        }
+
+        /* Theme toggle */
+        .theme-toggle {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .theme-toggle input {
+            display: none;
+        }
+
+        .toggle-track {
+            width: 44px;
+            height: 24px;
+            background: var(--surface-hover);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: background 0.3s;
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            left: 3px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 50%;
+            transition: left 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-thumb svg {
+            width: 12px;
+            height: 12px;
+            fill: white;
+        }
+
+        .theme-toggle input:checked ~ .toggle-thumb {
+            left: 23px;
+        }
+
+        /* Content */
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 32px 80px;
+        }
+
+        .page-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .last-updated {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+        }
+
+        .section {
+            margin-bottom: 36px;
+        }
+
+        .section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .section p {
+            font-size: 0.95rem;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .section .warning {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .section ul li {
+            font-size: 0.95rem;
+            color: var(--text);
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .section ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            background: var(--surface-hover);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
+
+        @media (max-width: 600px) {
+            .topbar {
+                padding: 12px 16px;
+            }
+
+            .content {
+                padding: 40px 16px 60px;
+            }
+
+            .page-title {
+                font-size: 1.6rem;
+            }
+
+            .section h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="topbar">
+        <a href="/" class="topbar-brand">Fetchr</a>
+        <div class="topbar-actions">
+            <a href="/api.html" class="api-link">API</a>
+            <a href="/pro.html" class="pro-link">Pro</a>
+            <label class="theme-toggle" title="Changer de thème">
+                <input type="checkbox" id="themeSwitch">
+                <span class="toggle-track"></span>
+                <span class="toggle-thumb">
+                    <svg viewBox="0 0 16 16"><path d="M8 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 1zm0 11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 8 12zm7-4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 .5.5zM4 8a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1 0-1h1A.5.5 0 0 1 4 8zm8.5-3.8a.5.5 0 0 1 0 .7l-.7.7a.5.5 0 1 1-.7-.7l.7-.7a.5.5 0 0 1 .7 0zM5 11.3a.5.5 0 0 1 0 .7l-.7.7a.5.5 0 0 1-.7-.7l.7-.7a.5.5 0 0 1 .7 0zm7.7.7a.5.5 0 0 1-.7 0l-.7-.7a.5.5 0 0 1 .7-.7l.7.7a.5.5 0 0 1 0 .7zM5 4.6a.5.5 0 0 1-.7.7l-.7-.7a.5.5 0 0 1 .7-.7l.7.7zM8 5a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+                </span>
+            </label>
+            <a href="/account.html" class="account-btn" id="accountBtn" title="Mon compte">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+            </a>
+        </div>
+    </nav>
+
+    <main class="content">
+        <h1 class="page-title">Conditions Générales d'Utilisation</h1>
+        <p class="last-updated">Dernière mise à jour : 30 juin 2026</p>
+
+        <div class="section">
+            <h2>1. Objet</h2>
+            <p>Fetchr.fr est un service en ligne permettant le téléchargement de contenus audio et vidéo depuis des plateformes tierces. Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et l'utilisation du service.</p>
+        </div>
+
+        <div class="section">
+            <h2>2. Acceptation des CGU</h2>
+            <p>En accédant au site Fetchr.fr et en utilisant le service, l'utilisateur accepte sans réserve les présentes CGU. Si vous n'acceptez pas ces conditions, vous ne devez pas utiliser le service.</p>
+        </div>
+
+        <div class="section">
+            <h2>3. Responsabilité de l'utilisateur</h2>
+            <p>L'utilisateur s'engage à ne télécharger que des contenus dont il détient les droits ou qui sont libres de droits (Creative Commons, domaine public, etc.).</p>
+            <p>Fetchr décline toute responsabilité en cas de violation du droit d'auteur par l'utilisateur. L'utilisateur est seul responsable de l'usage qu'il fait des contenus téléchargés via le service.</p>
+        </div>
+
+        <div class="section">
+            <h2>4. Avertissement relatif au droit d'auteur</h2>
+            <div class="warning">
+                Le téléchargement de vidéos protégées par le droit d'auteur sans autorisation est illégal en France (article L. 335-2 du Code de la propriété intellectuelle). Fetchr.fr ne peut être tenu responsable de l'usage que vous faites de ce service.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>5. Comptes et abonnements</h2>
+            <ul>
+                <li>L'inscription au service est gratuite</li>
+                <li>Le plan Pro est disponible à 4€/mois, sans engagement</li>
+                <li>La résiliation est possible à tout moment depuis l'espace compte</li>
+                <li>Un remboursement est possible dans les 7 jours suivant la souscription</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>6. Quotas et limites</h2>
+            <ul>
+                <li><strong>Free :</strong> 5 grabs par jour + 50 requêtes API par jour</li>
+                <li><strong>Pro :</strong> grabs illimités + 1000 requêtes API par jour</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>7. Disponibilité du service</h2>
+            <p>Le service est fourni "en l'état". Fetchr ne garantit pas une disponibilité de 100% et ne pourra être tenu responsable des interruptions temporaires liées à la maintenance ou à des facteurs techniques indépendants de sa volonté.</p>
+        </div>
+
+        <div class="section">
+            <h2>8. Propriété intellectuelle</h2>
+            <p>Fetchr est une marque déposée. L'ensemble du code source, du design et des contenus du site sont la propriété exclusive de Fetchr. Toute reproduction ou utilisation non autorisée est interdite.</p>
+        </div>
+
+        <div class="section">
+            <h2>9. Modification des CGU</h2>
+            <p>Fetchr se réserve le droit de modifier les présentes CGU. En cas de changement majeur, les utilisateurs seront notifiés au moins 30 jours avant l'entrée en vigueur des nouvelles conditions.</p>
+        </div>
+
+        <div class="section">
+            <h2>10. Droit applicable</h2>
+            <p>Les présentes CGU sont soumises au droit français. En cas de litige, les tribunaux de Paris seront seuls compétents.</p>
+        </div>
+    </main>
+
+    <script>
+        const themeSwitch = document.getElementById('themeSwitch');
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeSwitch.checked = true;
+        }
+        themeSwitch.addEventListener('change', () => {
+            if (themeSwitch.checked) {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+</body>
+</html>

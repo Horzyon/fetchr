@@ -199,7 +199,7 @@
 
         /* Page content */
         .page {
-            max-width: 480px;
+            max-width: 560px;
             width: 100%;
             margin: 0 auto;
             padding: 80px 0;
@@ -308,6 +308,76 @@
             font-size: 0.72rem;
             color: var(--text-muted);
         }
+
+        /* Comparison table */
+        .comparison {
+            margin-bottom: 48px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .comparison-table thead th {
+            padding: 14px 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table thead th.col-pro {
+            color: var(--gold);
+            background: rgba(245, 158, 11, 0.05);
+            border-left: 2px solid var(--gold);
+        }
+
+        .comparison-table tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .comparison-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tbody td.col-pro {
+            background: rgba(245, 158, 11, 0.03);
+            border-left: 2px solid var(--gold);
+            font-weight: 500;
+            color: var(--gold);
+        }
+
+        .comparison-table tbody td.col-feature {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .comparison-table tbody td.col-free {
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 500px) {
+            .comparison-table {
+                font-size: 0.78rem;
+            }
+            .comparison-table thead th,
+            .comparison-table tbody td {
+                padding: 10px 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -339,6 +409,50 @@
             <p>4K, FLAC, illimite, prioritaire.</p>
         </section>
 
+        <section class="comparison">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Free</th>
+                        <th class="col-pro">Pro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-feature">Video max</td>
+                        <td class="col-free">1080p</td>
+                        <td class="col-pro">4K</td>
+                    </tr>
+                    <tr>
+                        <td class="col-feature">Audio max</td>
+                        <td class="col-free">MP3 128kbps</td>
+                        <td class="col-pro">FLAC, MP3 320kbps</td>
+                    </tr>
+                    <tr>
+                        <td class="col-feature">Telechargements</td>
+                        <td class="col-free">5/jour</td>
+                        <td class="col-pro">Illimite</td>
+                    </tr>
+                    <tr>
+                        <td class="col-feature">API</td>
+                        <td class="col-free">50 req/jour</td>
+                        <td class="col-pro">1 000 req/jour</td>
+                    </tr>
+                    <tr>
+                        <td class="col-feature">Priorite</td>
+                        <td class="col-free">Standard</td>
+                        <td class="col-pro">Prioritaire</td>
+                    </tr>
+                    <tr>
+                        <td class="col-feature">Prix</td>
+                        <td class="col-free">Gratuit</td>
+                        <td class="col-pro">4&#8364;/mois</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
         <div class="perks">
             <div class="perk">
                 <div class="perk-check"><svg viewBox="0 0 12 12"><path d="M10 3L4.5 8.5 2 6"/></svg></div>
@@ -365,9 +479,22 @@
         <div class="cta">
             <div class="price">4&#8364; <span>/mois</span></div>
             <a href="#" class="cta-btn">Passer Pro</a>
-            <div class="fine-print">Sans engagement - Rembourse sous 7 jours</div>
+            <div class="fine-print">
+                Paiement securise par Stripe. Carte bancaire acceptee.<br>
+                Abonnement mensuel sans engagement, resiliable a tout moment.
+            </div>
         </div>
     </div>
+
+    <footer style="width:100%;max-width:480px;margin:0 auto;padding:40px 20px 20px;text-align:center;font-size:0.72rem;color:var(--text-muted);">
+        <a href="/terms.html" style="color:var(--text-muted);text-decoration:none;">CGU</a>
+        <span style="margin:0 8px;">·</span>
+        <a href="/privacy.html" style="color:var(--text-muted);text-decoration:none;">Confidentialité</a>
+        <span style="margin:0 8px;">·</span>
+        <a href="/contact.html" style="color:var(--text-muted);text-decoration:none;">Contact</a>
+        <span style="margin:0 8px;">·</span>
+        <a href="/faq.html" style="color:var(--text-muted);text-decoration:none;">FAQ</a>
+    </footer>
 
     <script>
         const API = window.location.origin + '/api';
