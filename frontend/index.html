@@ -216,6 +216,7 @@
         }
 
         .hero h1 .hero-pro {
+            display: none;
             position: absolute;
             top: -2px;
             right: -28px;
@@ -883,9 +884,8 @@
                     document.querySelectorAll('.format-btn.locked').forEach(btn => {
                         btn.classList.remove('locked');
                     });
-                    // Hide hero-pro badge (user already has pro)
                     const heroPro = document.querySelector('.hero-pro');
-                    if (heroPro) heroPro.style.display = 'none';
+                    if (heroPro) heroPro.style.display = 'inline-block';
                 }
             } catch {
                 localStorage.removeItem('fetchr_token');

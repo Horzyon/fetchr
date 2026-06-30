@@ -358,8 +358,18 @@ async def status(session_id: str):
 COOKIES_FILE = Path("/app/cookies.txt")
 COOKIES_ARGS = ["--cookies", str(COOKIES_FILE)] if COOKIES_FILE.exists() else []
 
+COOKIE_ERROR_MARKERS = [
+    "Sign in to confirm you're not a bot",
+    "cookies",
+    "Use --cookies-from-browser",
+    "This request was detected as a bot",
+]
+
+cookies_expired = False
+
 
 async def _fetch_meta(url: str) -> dict | None:
+    global cookies_expired
     import logging
     logger = logging.getLogger("fetchr")
     proc = await asyncio.create_subprocess_exec(
@@ -369,9 +379,23 @@ async def _fetch_meta(url: str) -> dict | None:
     )
     stdout, stderr = await proc.communicate()
     if proc.returncode != 0:
-        logger.warning(f"yt-dlp failed for {url!r}: exit={proc.returncode} stderr={stderr.decode()[:500]}")
+        err_msg = stderr.decode()[:500]
+        logger.warning(f"yt-dlp failed for {url!r}: exit={proc.returncode} stderr={err_msg}")
+        if any(marker in err_msg for marker in COOKIE_ERROR_MARKERS):
+            cookies_expired = True
+            logger.error("COOKIES EXPIRED — YouTube is blocking requests. Refresh cookies.")
         return None
+    cookies_expired = False
     return json.loads(stdout)
+
+
+@app.get("/health")
+async def health():
+    return {
+        "status": "degraded" if cookies_expired else "ok",
+        "cookies_expired": cookies_expired,
+        "cookies_file": COOKIES_FILE.exists(),
+    }
 
 
 async def _prefetch(session_id: str, url: str, pro: bool, session_dir: Path):
