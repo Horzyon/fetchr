@@ -355,11 +355,15 @@ async def status(session_id: str):
 
 # --- Pré-fetch ---
 
+COOKIES_FILE = Path("/app/cookies.txt")
+COOKIES_ARGS = ["--cookies", str(COOKIES_FILE)] if COOKIES_FILE.exists() else []
+
+
 async def _fetch_meta(url: str) -> dict | None:
     import logging
     logger = logging.getLogger("fetchr")
     proc = await asyncio.create_subprocess_exec(
-        "yt-dlp", "--dump-json", "--no-download", url,
+        "yt-dlp", *COOKIES_ARGS, "--dump-json", "--no-download", url,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
@@ -385,7 +389,7 @@ async def _prefetch_video(session_id: str, url: str, pro: bool, session_dir: Pat
 
     output_path = str(session_dir / "video_src.%(ext)s")
     proc = await asyncio.create_subprocess_exec(
-        "yt-dlp", "-f", format_sel, "-o", output_path, "--no-playlist", url,
+        "yt-dlp", *COOKIES_ARGS, "-f", format_sel, "-o", output_path, "--no-playlist", url,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
@@ -403,7 +407,7 @@ async def _prefetch_audio(session_id: str, url: str, pro: bool, session_dir: Pat
 
     output_path = str(session_dir / "audio_src.%(ext)s")
     proc = await asyncio.create_subprocess_exec(
-        "yt-dlp", "-f", format_sel, "-o", output_path, "--no-playlist", url,
+        "yt-dlp", *COOKIES_ARGS, "-f", format_sel, "-o", output_path, "--no-playlist", url,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
@@ -451,7 +455,7 @@ async def _download_video_direct(url: str, quality: str, session_dir: Path) -> P
     format_sel = f"bestvideo[height<={h}][ext=mp4]+bestaudio[ext=m4a]/bestvideo[height<={h}]+bestaudio/best[height<={h}]"
 
     proc = await asyncio.create_subprocess_exec(
-        "yt-dlp", "-f", format_sel,
+        "yt-dlp", *COOKIES_ARGS, "-f", format_sel,
         "--merge-output-format", "mp4",
         "-o", output_path, "--no-playlist", url,
         stdout=asyncio.subprocess.PIPE,
