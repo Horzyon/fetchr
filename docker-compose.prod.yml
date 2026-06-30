@@ -20,7 +20,7 @@ services:
       - .env
     volumes:
       - fetchr_data:/data
-      - ./cookies.txt:/app/cookies.txt:ro
+      - ./cookies.txt:/app/cookies.txt
     restart: unless-stopped
 
 volumes:
